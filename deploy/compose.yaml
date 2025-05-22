@@ -1,0 +1,18 @@
+
+services:
+  topic2files:
+    image: ghcr.io/diz-unimr/kafkatopic2files:latest
+    hostname: topic2files
+    environment:
+      SPRING_KAFKA_BOOTSTAPSERVERS: ${KAFKA_BROKERS:?}
+      SPRING_KAFKA_CONSUMER_GROUP-ID: ${TOPIC2FILE_GROUP:?}
+      SPRING_KAFKA_CONSUMER_TOPIC_NAME: ${TOPIC2FILE_SOURCE_TOPIC:?}
+      SPRING_KAFKA_SECURITY_PROTOCOL: SSL
+      SPRING_KAFKA_SSL_TRUST_STORE-LOCATION: /opt/kafkacert/ssl/truststore.jks
+      SPRING_KAFKA_SSL_TRUST_STORE-PASSWORD: ${TOPIC2FILE_SSL_TRUST_STORE_PASSWORD}
+      SPRING_KAFKA_SSL_TRUST-STORE-LOCATION: /opt/kafkacert/ssl/truststore.jks
+      SPRING_KAFKA_SSL_TRUST-STORE-PASSWORD: ${KAFKA_TRUST_STORE_PASSWORD}
+      APP_OUTPUT_PREFIX: "msg"
+      APP_OUTPUT_POSTFIX: ".xml"
+    volumes:
+      - ${TOPIC2FILE_OUTPUT_LOCAL_DIR:-./output-folder}:/var/tmp/topic2file:rw
