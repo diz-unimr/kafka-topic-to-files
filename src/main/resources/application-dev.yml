@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: kafkatopic2files
+
+  kafka:
+    bootstrap-servers: "localhost:9092"
+    consumer:
+    security.protocol: ${SECURITY_PROTOCOL:PLAINTEXT}
+

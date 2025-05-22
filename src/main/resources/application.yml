@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: kafkatopic2files
+
+  kafka:
+    bootstrap-servers: "localhost:9092"
+    consumer:
+      group-id: "topic-to-files"
+      auto-offset-reset: earliest
+      topic:
+        name: "produce-to-topic"
+    security.protocol: ${SECURITY_PROTOCOL:PLAINTEXT}
+    ssl:
+      trust-store-location: file://${TOPIC2FILE_SSL_STORE_INTERNAL:/opt/kafkacert/ssl/truststore.jks}
+      trust-store-password: ${TOPIC2FILE_SSL_TRUST_STORE_PASSWORD}
+      key-store-location: file://${TOPIC2FILE_SSL_KEY_STORE_INTERNAL:/opt/kafkacert/ssl/keystore.jks}
+      key-store-password: ${TOPIC2FILE_SSL_KEY_STORE_PASSWORD}
+
+app:
+  output:
+    dir: "/var/tmp/"
+    prefix: "msg-"
+    postfix: ".xml"
