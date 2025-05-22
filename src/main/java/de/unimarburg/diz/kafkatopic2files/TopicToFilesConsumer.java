@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Service
 public class TopicToFilesConsumer {
@@ -29,9 +30,9 @@ public class TopicToFilesConsumer {
       @Value("${app.output.prefix}") String outPrefix,
       @Value("${app.output.postfix}") String outPostfix) {
 
-    this.outputDir = outputDir;
-    this.outPrefix = outPrefix;
-    this.outPostfix = outPostfix;
+    this.outputDir = StringUtils.hasText(outputDir) ? outputDir.trim() : "";
+    this.outPrefix = StringUtils.hasText(outPrefix) ? outPrefix.trim() : "";
+    this.outPostfix = StringUtils.hasText(outPostfix) ? outPostfix.trim() : "";
   }
 
   @KafkaListener(
@@ -46,18 +47,16 @@ public class TopicToFilesConsumer {
       writer.write(message);
       writer.newLine();
 
-      log.debug("Message written to file: " + fileName);
+        log.debug("Message written to file: {}", fileName);
     } catch (IOException e) {
-      log.error("Failed to write message to file: " + e.getMessage());
+        log.error("Failed to write message to file: {}", e.getMessage());
       new RuntimeException("failed to write message to fiele" + fileName, e);
     }
 
-    log.debug("Key: " + record.key() + ", Value:" + record.value());
-    log.debug("Partition:" + record.partition() + ",Offset:" + record.offset());
-    log.info(
-        "message consumed. starts "
-            + record.value().substring(0, Math.min(20, record.value().length()))
-            + " ...");
+      log.debug("Key: {}, Value:{}", record.key(), record.value());
+      log.debug("Partition:{},Offset:{}", record.partition(), record.offset());
+      log.info("message consumed. starts {} ...",
+          record.value().substring(0, Math.min(20, record.value().length())));
   }
 
   private String getFileName(ConsumerRecord<String, String> record) {
