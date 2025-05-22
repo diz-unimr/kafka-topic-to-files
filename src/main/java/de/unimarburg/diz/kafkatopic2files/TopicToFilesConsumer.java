@@ -47,16 +47,17 @@ public class TopicToFilesConsumer {
       writer.write(message);
       writer.newLine();
 
-        log.debug("Message written to file: {}", fileName);
+      log.debug("Message written to file: {}", fileName);
     } catch (IOException e) {
-        log.error("Failed to write message to file: {}", e.getMessage());
-      new RuntimeException("failed to write message to fiele" + fileName, e);
+      log.error("Failed to write message to file: {}", e.getMessage());
+      throw new RuntimeException("failed to write message to fiele" + fileName, e);
     }
 
-      log.debug("Key: {}, Value:{}", record.key(), record.value());
-      log.debug("Partition:{},Offset:{}", record.partition(), record.offset());
-      log.info("message consumed. starts {} ...",
-          record.value().substring(0, Math.min(20, record.value().length())));
+    log.debug("Key: {}, Value:{}", record.key(), record.value());
+    log.debug("Partition:{},Offset:{}", record.partition(), record.offset());
+    log.info(
+        "message consumed. starts {} ...",
+        record.value().substring(0, Math.min(20, record.value().length())));
   }
 
   private String getFileName(ConsumerRecord<String, String> record) {
