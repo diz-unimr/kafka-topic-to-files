@@ -4,6 +4,9 @@ package de.unimarburg.diz.kafkatopic2files;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -42,7 +45,15 @@ public class TopicToFilesConsumer {
     String message = record.value();
 
     final String fileName = getFileName(record);
-    try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
+
+    // makes sure directory is created
+    Path path = Paths.get(outputDir);
+    try {
+      createDirectoryPath(path);
+    } catch (IOException e) {
+      log.error("could not create target directory '{}'", outputDir, e);
+    }
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, false))) {
 
       writer.write(message);
       writer.newLine();
@@ -60,11 +71,21 @@ public class TopicToFilesConsumer {
         record.value().substring(0, Math.min(20, record.value().length())));
   }
 
+  private static void createDirectoryPath(Path path) throws IOException {
+    if (path == null) {
+      return;
+    }
+    createDirectoryPath(path.getParent());
+    Files.createDirectories(path);
+  }
+
   private String getFileName(ConsumerRecord<String, String> record) {
-    return outputDir
-        + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssn-"))
-        + outPrefix
-        + record.key()
-        + outPostfix;
+    return Paths.get(
+            outputDir,
+            LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssn-"))
+                + outPrefix
+                + record.key()
+                + outPostfix)
+        .toString();
   }
 }

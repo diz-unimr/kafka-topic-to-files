@@ -1,0 +1,4 @@
+KAFKA_BROKERS=localhost:9092
+TOPIC2FILE_SOURCE_TOPIC=produce-to-topic
+TOPIC2FILE_DIR=/var/tmp/
+TOPIC2FILE_GROUP="dummy-group-id"

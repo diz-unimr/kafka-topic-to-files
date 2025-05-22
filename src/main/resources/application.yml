@@ -18,6 +18,6 @@ spring:
 
 app:
   output:
-    dir: "/var/tmp/"
+    dir: "/var/tmp/topic2file"
     prefix: "msg-"
     postfix: ".xml"
