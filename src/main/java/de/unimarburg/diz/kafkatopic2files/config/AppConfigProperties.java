@@ -17,6 +17,16 @@ public class AppConfigProperties {
   private AppConfigOutput appConfigOutput;
   private GIcsConfigProperties gIcsConfigProperties;
 
+  /**
+   * @param maxRetryAttempts
+   * @param pathToPid Provide JsonPath oder XPath expression to extract patient identification
+   *     value, which will be used to query for a valid consent.
+   * @param useXPath If <c>true</c> we expect {@link #pathToPid} to be a xPath expression. If
+   *     <c>false</c> we expect a json path expression. If key is missing and consent check is
+   *     enabled we have a configuration error.
+   * @param appConfigOutput
+   * @param gIcsConfigProperties
+   */
   @Autowired
   public AppConfigProperties(
       @Value("${app.maxRetryAttempts}") Integer maxRetryAttempts,

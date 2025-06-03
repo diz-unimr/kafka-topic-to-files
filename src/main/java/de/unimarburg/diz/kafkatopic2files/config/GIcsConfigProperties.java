@@ -107,21 +107,6 @@ public class GIcsConfigProperties {
   /** Consent Policy which should be used for consent check */
   public String policySystem = "urn:oid:2.16.840.1.113883.3.1937.777.24.5.3";
 
-  /**
-   * Provide JsonPath oder XPath expression to extragt patient identification value, which will be
-   * used to query for a valid consent.
-   *
-   * @implNote only one source type is expected use xPath or jsonPath
-   */
-  public String pathToPid;
-
-  /**
-   * If <c>true</c> we expect {@link #pathToPid} to be a xPath expression. If <c>false</c> we expect
-   * a json path expression. If key is missing and consent check is enabled we have a configuration
-   * error.
-   */
-  public String useXPath;
-
   public GIcsConfigProperties(
       String uri,
       String username,
