@@ -22,7 +22,7 @@ repositories {
 
 
 ext {
-	set('hapiVersion', "7.4.5")
+	set('hapiVersion', "7.6.1")
 }
 
 dependencies {
