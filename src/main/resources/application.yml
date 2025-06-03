@@ -10,13 +10,22 @@ spring:
       topic:
         name: "produce-to-topic"
     security.protocol: ${SECURITY_PROTOCOL:PLAINTEXT}
-    ssl:
-      trust-store-location: file://${TOPIC2FILE_SSL_STORE_INTERNAL:/opt/kafkacert/ssl/truststore.jks}
-      trust-store-password: ${TOPIC2FILE_SSL_TRUST_STORE_PASSWORD}
-      key-store-location: file://${TOPIC2FILE_SSL_KEY_STORE_INTERNAL:/opt/kafkacert/ssl/keystore.jks}
-      key-store-password: ${TOPIC2FILE_SSL_KEY_STORE_PASSWORD}
+   # ssl:
+   #   trust-store-location: file://${TOPIC2FILE_SSL_STORE_INTERNAL:/opt/kafkacert/ssl/truststore.jks}
+   #   trust-store-password: ${TOPIC2FILE_SSL_TRUST_STORE_PASSWORD}
+   #   key-store-location: file://${TOPIC2FILE_SSL_KEY_STORE_INTERNAL:/opt/kafkacert/ssl/keystore.jks}
+   #   key-store-password: ${TOPIC2FILE_SSL_KEY_STORE_PASSWORD}
 
 app:
+  maxRetryAttempts: 3
+  pathToPid: "//Menge_Patient/Patient/Patienten_Stammdaten/@Patient_ID"
+  useXPath: true
+  gics:
+    username: "test-user-name"
+    password: "super-save-password"
+    enabled: true
+    url: ""
+
   output:
     dir: "/var/tmp/topic2file"
     prefix: "msg-"

@@ -1,6 +1,11 @@
 /* GNU AFFERO GENERAL PUBLIC LICENSE  Version 3 (C)2025 */
 package de.unimarburg.diz.kafkatopic2files;
 
+import de.unimarburg.diz.kafkatopic2files.config.AppConfigOutput;
+import de.unimarburg.diz.kafkatopic2files.config.AppConfigProperties;
+import de.unimarburg.diz.kafkatopic2files.consent.ICheckConsent;
+import de.unimarburg.diz.kafkatopic2files.consent.TtpConsentStatus;
+import de.unimarburg.diz.kafkatopic2files.util.PidExtractor;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,7 +18,6 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -26,16 +30,25 @@ public class TopicToFilesConsumer {
   private final String outputDir;
   private final String outPrefix;
   private final String outPostfix;
+  private final AppConfigProperties appConfigProperties;
+  private final ICheckConsent iCheckConsent;
+  private final PidExtractor pidExtractor;
 
   @Autowired
   public TopicToFilesConsumer(
-      @Value("${app.output.dir}") String outputDir,
-      @Value("${app.output.prefix}") String outPrefix,
-      @Value("${app.output.postfix}") String outPostfix) {
+      AppConfigOutput appConfigOutput,
+      AppConfigProperties appConfigProperties,
+      ICheckConsent iCheckConsent,
+      PidExtractor pidExtractor) {
 
-    this.outputDir = StringUtils.hasText(outputDir) ? outputDir.trim() : "";
-    this.outPrefix = StringUtils.hasText(outPrefix) ? outPrefix.trim() : "";
-    this.outPostfix = StringUtils.hasText(outPostfix) ? outPostfix.trim() : "";
+    this.outputDir = StringUtils.hasText(appConfigOutput.dir()) ? appConfigOutput.dir().trim() : "";
+    this.outPrefix =
+        StringUtils.hasText(appConfigOutput.prefix()) ? appConfigOutput.prefix().trim() : "";
+    this.outPostfix =
+        StringUtils.hasText(appConfigOutput.postfix()) ? appConfigOutput.postfix().trim() : "";
+    this.appConfigProperties = appConfigProperties;
+    this.iCheckConsent = iCheckConsent;
+    this.pidExtractor = pidExtractor;
   }
 
   @KafkaListener(
@@ -43,8 +56,15 @@ public class TopicToFilesConsumer {
       properties = {"auto.offset.reset=earliest"})
   public void writeMessageToDirectory(ConsumerRecord<String, String> record) {
     String message = record.value();
-
     final String fileName = getFileName(record);
+
+    var pid = pidExtractor.readPid(message, appConfigProperties.pathToPid);
+
+    var consentStatus = iCheckConsent.getTtpConsentStatus(pid);
+    if (!TtpConsentStatus.CONSENTED.equals(consentStatus)) {
+      log.debug("Skipping file '{}', since consent is missing.", fileName);
+      return;
+    }
 
     // makes sure directory is created
     Path path = Paths.get(outputDir);

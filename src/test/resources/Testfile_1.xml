@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ADT_GEKID xmlns="http://www.gekid.de/namespace" Schema_Version="2.2.1">
+	<Absender Absender_ID="999999" Software_ID="ONKOSTAR" Installations_ID="2">
+		<Absender_Bezeichnung>XXX</Absender_Bezeichnung>
+		<Absender_Ansprechpartner/>
+		<Absender_Anschrift>XXXX</Absender_Anschrift>
+	</Absender>
+	<Menge_Patient>
+		<Patient>
+            <Patienten_Stammdaten Patient_ID="1234567890">
+                <KrankenversichertenNr>Q00000000</KrankenversichertenNr>
+                <KrankenkassenNr>10000000</KrankenkassenNr>
+                <Patienten_Nachname>Baa</Patienten_Nachname>
+                <Patienten_Vornamen>Foo</Patienten_Vornamen>
+                <Patienten_Geschlecht>M</Patienten_Geschlecht>
+                <Patienten_Geburtsdatum>21.11.1901</Patienten_Geburtsdatum>
+            </Patienten_Stammdaten>
+		</Patient>
+	</Menge_Patient>
+</ADT_GEKID>
