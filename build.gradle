@@ -28,7 +28,7 @@ ext {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'org.springframework.kafka:spring-kafka'
-	implementation("org.springframework.retry:spring-retry:2.0.12")
+	implementation("org.springframework.retry:spring-retry:2.0.13")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("ca.uhn.hapi.fhir:hapi-fhir-base:${hapiVersion}")
 	implementation("ca.uhn.hapi.fhir:hapi-fhir-structures-r4:${hapiVersion}")
